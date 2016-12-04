@@ -1,3 +1,5 @@
+(The note below has been copypasted to the [Reverse Engineering for Beginners book](http://beginners.re/))
+
 # Integral datatypes
 
 Integral datatype is a type for a value which can be converted to number.
@@ -20,6 +22,16 @@ For example:
 		printf ("this will always be executed\n");
 	else
 		printf ("this will never\n");
+
+This is popular way of enumerating characters in a C-string:
+
+	char *input=...;
+
+	while(*input) // execute body if *input is non-zero
+	{
+		// do something with *input
+		input++;
+	};
 
 ## Nibble AKA nybble
 
@@ -135,15 +147,19 @@ In general, if a CPU marketed as "n-bit CPU", this usually means it has n-bit *G
 
 Hard to believe, but there was a time when hard disks and RAM modules were marketed as having *n* kilo-words instead of
 *b* kilobytes/megabytes.
+
 For example, [Apollo Guidance Computer](https://en.wikipedia.org/wiki/Apollo_Guidance_Computer) has 2048 words of RAM.
 This was a 16-bit computer, so there was 4096 bytes of RAM.
+
+[TX-0](https://en.wikipedia.org/wiki/TX-0) had 64K of 18-bit words of magnetic core memory, i.e., 64 kilo-words.
+
 [DECSYSTEM-2060](https://en.wikipedia.org/wiki/DECSYSTEM-20) could have up to 4096 kilowords of "solid state memory"
 (i.e., hard disks, tapes, etc).
 This was 36-bit computer, so this is 18432 kilobytes or ~18 megabytes.
 
 ---
 
-By old standards, *int* in C/C++ is almost always mapped to *word*.
+*int* in C/C++ is almost always mapped to *word*.
 (Except of AMD64 architecture where *int* is still 32-bit one, perhaps, for the reason of better portability).
 
 *int* is 16-bit on PDP-11 and old MS-DOS compilers.
@@ -253,7 +269,7 @@ that there is even special notation for it exist ([Knuth's up-arrow notation](ht
 These numbers are so large so these are not practical for engineering, science and mathematics.
 
 Almost all engineers and scientists are happy with IEEE 754 double precision floating point, which has maximal
-value around 1.8 * 10^308.
+value around 1.8 \* 10^308.
 
 In fact, upper bound in practical computing is much, much lower.
 If you get [source code of UNIX v6 for PDP-11](http://minnie.tuhs.org/Archive/PDP-11/Distributions/research/Dennis_v6/),
@@ -268,12 +284,14 @@ usage of 64-bit *int* is even rarer.
 I would say, 16-bit numbers in range (0..65535) are probably most used numbers in computing.
 
 Given that, if you see unusually large 32-bit value like 0x87654321, this is a good chance this can be:
-1) address (can be checked using memory map feature of debugger);
-2) packed bytes (can be checked visually);
-3) bit flags;
-4) something related to (amateur) cryptography;
-5) magic number;
-6) IEEE 754 floating point number (can also be checked).
+* this can be still 16-bit number, but signed, between 0xFFFF8000 (-32768) and 0xFFFFFFFF (-1).
+[Example](https://github.com/dennis714/random_notes/blob/master/timedate.md).
+* address (can be checked using memory map feature of debugger);
+* packed bytes (can be checked visually);
+* bit flags;
+* something related to (amateur) cryptography;
+* magic number;
+* IEEE 754 floating point number (can also be checked).
 
 Almost same story for 64-bit values.
 
@@ -318,8 +336,8 @@ Many debuggers is able to show the memory map of the debuggee, for example,
 If a value is increasing by step 4 on 32-bit architecture or by step 8 on 64-bit one,
 this probably sliding address of some element of array.
 
-It's important to know that win32 doesn't use addresses below 0x1000 (TODO), so if you see some number below this value,
-this cannot be an address.
+It's important to know that win32 doesn't use addresses below 0x10000 (TODO), so if you see some number below this value,
+this cannot be an address ([see also](https://msdn.microsoft.com/en-us/library/ms810627.aspx)).
 
 Anyway, many debuggers can show you if the value in a register can be an address to something.
 OllyDbg can also show an ASCII string if the value is an address of it.
